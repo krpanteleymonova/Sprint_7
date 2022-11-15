@@ -8,21 +8,25 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
+import java.util.List;
+
 @RunWith(Parameterized.class)
 public class OrderCreateTest {
 
     private OrderClient orderClient;
-    private final Order order;
     private int track;
+    private List<String> color;
 
-    public OrderCreateTest(Order order) {
-        this.order = order;
+    public OrderCreateTest(List<String> color) {
+        this.color = color;
     }
 
     @Before
     public void SetUp() {
         orderClient = new OrderClient();
+
     }
+
 
     @After
     public void CleanUp() {
@@ -32,13 +36,13 @@ public class OrderCreateTest {
     @Parameterized.Parameters
     public static Object[][] getTestData() {
         return new Object[][]{
-
-                {OrderGenerator.getOrderColorBlack()},
-                {OrderGenerator.getOrderColorGrey()},
-                {OrderGenerator.getOrderColorBlackAndGrey()},
-                {OrderGenerator.getOrderColorEmpty()},
+                {List.of()},
+                {List.of("BLACK")},
+                {List.of("GREY")},
+                {List.of("BLACK", "GREY")},
         };
     }
+
 
     @Test
     @DisplayName("Успешное создание заказа")
@@ -48,6 +52,7 @@ public class OrderCreateTest {
 
     @Step("Создать заказ")
     public void sendPostRequestCreateOrder() {
+        Order order = OrderGenerator.OrderGetColor(color);
         ValidatableResponse responseCreateOrder = orderClient.create(order);
         int statusOrder = responseCreateOrder.extract().statusCode();
         System.out.println("Статус создания заказа: " + statusOrder);

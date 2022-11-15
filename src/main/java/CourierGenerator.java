@@ -1,10 +1,12 @@
+import com.github.javafaker.Faker;
+
 import java.sql.Timestamp;
 public class CourierGenerator {
     static Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-
-    private static final String login = "kpanteleymonova_"+ timestamp;
+    static Faker faker = new Faker();
+    private static final String login = faker.internet().emailAddress()+ timestamp;
     private static final String password = String.valueOf(timestamp);
-    private static final String firstName = "kpanteleymonova";
+    private static final String firstName = faker.name().firstName();
     private static final String nonexistent = "nonexistent";
 
     public static Courier getDefault() {
